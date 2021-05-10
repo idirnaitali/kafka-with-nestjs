@@ -43,3 +43,20 @@ npm npm i --save kafkajs
 
 npm i @nest/microservices
 ```
+
+## Kafka microservice config
+
+````json
+{
+  transport: Transport.KAFKA,
+  options: {
+    client: {
+      brokers: [
+        'localhost:9092'
+      ]
+    }
+  }
+}
+````
+
+See [main.ts](/src/main.ts)
