@@ -18,6 +18,14 @@ We will use the [NestJs Kafka module](https://docs.nestjs.com/microservices/kafk
 npm install
 ```
 
+## Start the Kafka cluster
+
+```shell
+docker-compose up
+```
+
+See [docker-compose.yml](/docker-compose.yml)
+
 ## Running the app
 
 ```bash
