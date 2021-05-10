@@ -46,7 +46,7 @@ npm i @nest/microservices
 
 ## Kafka microservice config
 
-````json
+````ts
 {
   transport: Transport.KAFKA,
   options: {
@@ -60,3 +60,48 @@ npm i @nest/microservices
 ````
 
 See [main.ts](/src/main.ts)
+
+## Kafka client config
+
+````ts
+  @Client({
+  transport: Transport.KAFKA,
+  options: {
+    client: {
+      clientId: 'ping',
+      brokers: ['localhost:9092'],
+    },
+    consumer: {
+      groupId: 'ping-consumer',
+    },
+  },
+})
+client: ClientKafka;
+````
+To test the ping click here http://localhost:3000/ping 
+
+See [app.controller.ts#24](/src/app.controller.ts)
+
+## Publisher
+
+````ts
+...
+this.client.emit<string>('topic-name', {...});
+...
+````
+
+See [app.controller.ts#35](/src/app.controller.ts)
+
+## Subscriber
+
+````ts
+...
+@EventPattern('topic-name')
+async handlePing(payload: any) {
+  // handle posted message => payload
+}
+...
+````
+
+See [app.controller.ts#39](/src/app.controller.ts)
+
