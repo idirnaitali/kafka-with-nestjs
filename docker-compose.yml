@@ -41,3 +41,13 @@ services:
       - zookeeper
     depends_on:
       - zookeeper
+
+  postgres:
+    image: postgres:11.6-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=kafka-nest
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
