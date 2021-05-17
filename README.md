@@ -1,6 +1,6 @@
 # [Kafka](https://kafka.apache.org) with [NestJS](https://nestjs.com/)
 
-![home](img/homr.jpg)
+![home](img/home.jpg)
 
 ## Description
 
@@ -38,70 +38,106 @@ npm run start:dev
 
 ## Required packages
 
-```shell
-npm npm i --save kafkajs
+- [KafkaJs](https://www.npmjs.com/package/kafkajs)
+- [PG](https://www.npmjs.com/package/pg)
+- [Typeorm](https://www.npmjs.com/package/typeorm)
+- [Nest Microservices](https://www.npmjs.com/package/@nest/microservices)
+- [Nest Typeorm](https://www.npmjs.com/package/@nestjs/typeorm)
 
-npm i @nest/microservices
-```
-
-## Kafka microservice config
-
+## Kafka config
 ````ts
-{
+export const KAFKA_CONFIG: KafkaOptions = {
   transport: Transport.KAFKA,
   options: {
-    client: {
-      brokers: [
-        'localhost:9092'
-      ]
-    }
-  }
-}
+    ...
+  },
+};
 ````
+See [kafka.config.ts](/src/config/kafka.config.ts)
 
+## Kafka microservices starter
+````ts
+...
+app.connectMicroservice(KAFKA_CONFIG);
+await app.startAllMicroservicesAsync();
+...
+````
 See [main.ts](/src/main.ts)
 
-## Kafka client config
-
+## Kafka client injection
 ````ts
-  @Client({
-  transport: Transport.KAFKA,
-  options: {
-    client: {
-      clientId: 'ping',
-      brokers: ['localhost:9092'],
-    },
-    consumer: {
-      groupId: 'ping-consumer',
-    },
-  },
-})
-client: ClientKafka;
+class PtoducerOrConsumer {
+  ...
+  @Client(KAFKA_CONFIG)
+  private client: ClientKafka;
+  ...
+}
 ````
-To test the ping click here http://localhost:3000/ping 
+See [controllers](/src/controller)
 
-See [app.controller.ts#24](/src/app.controller.ts)
-
-## Publisher
-
+## Producers
 ````ts
 ...
-this.client.emit<string>('topic-name', {...});
+this.client.emit<string>('messages.create', {...});
 ...
 ````
+See [producers.controller.ts](/src/controller/producers.controller.ts)
 
-See [app.controller.ts#35](/src/app.controller.ts)
-
-## Subscriber
-
+## Consumers
 ````ts
 ...
-@EventPattern('topic-name')
-async handlePing(payload: any) {
-  // handle posted message => payload
+@EventPattern('messages.create')
+handleMessage(payload: any) {
+  // handle posted message => save it in db, notify subscribers, ...
 }
 ...
 ````
+See [consumers.controller.ts#39](/src/controller/consumers.controller.ts)
 
-See [app.controller.ts#39](/src/app.controller.ts)
+## Demo
 
+- ### Running services
+````shell
+npm run start
+````
+![create logs](img/start-logs.png)
+
+- ### Create message 
+```shell
+curl --location --request POST 'http://localhost:3000/api/v1/producers/messages' --header 'Content-Type: application/json' --data-raw '{"pseudo": "idir", "content": "Hello, i am ready, we can start ;)"}'
+```
+![create logs](img/creat-logs.png)
+
+![db](img/db.png)
+
+- ### Update message
+```shell
+curl --location --request PUT 'http://localhost:3000/api/v1/producers/messages/{messageId}' --header 'Content-Type: application/json' --data-raw '{"content": "Hello, i am ready. \n we can start :) ?"}'
+```
+![update logs](img/update-logs.png)
+
+-  ### Delete message
+```shell
+curl --location --request DELETE 'http://localhost:3000/api/v1/producers/messages/{messageId}' 
+```
+![delete logs](img/delete-logs.png)
+
+- ### Kafdrop UI
+
+    - #### Brokers view
+    ![Brokers view](img/kafdrop-home.png)
+
+    - #### Specific broker view
+    ![Specific broker view](img/kafdrop-home2.png)
+
+    - #### Topic view
+    ![Topic view](img/topic-create.png)
+   
+    - #### Create messages topic view
+    ![Create messages topic view](img/create-messages.png)
+    
+    - #### Update messages topic view
+    ![Update messages topic view](img/update-messages.png)
+    
+    - #### Delete messages topic view
+    ![Delete messages topic view](img/delete-messages.png)
