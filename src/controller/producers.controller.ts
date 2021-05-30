@@ -22,7 +22,7 @@ export class ProducersController {
   @HttpCode(HttpStatus.ACCEPTED)
   update(@Param('messageId') messageId: string, @Body() message: Message): { status: string } {
     this.logger.log(`Received put request for message id: ${messageId}`);
-    this.client.emit(MESSAGES_TOPICS.UPDATE, { messageId, content: message.content, time: new Date() });
+    this.client.emit(MESSAGES_TOPICS.UPDATE, { id: messageId, content: message.content, time: new Date() });
     return { status: 'ACCEPTED' };
   }
 
@@ -30,7 +30,7 @@ export class ProducersController {
   @HttpCode(HttpStatus.ACCEPTED)
   delete(@Param('messageId') messageId: string): { status: string } {
     this.logger.log(`Received delete request for message id: ${messageId}`);
-    this.client.emit(MESSAGES_TOPICS.DELETE, { messageId, time: new Date() });
+    this.client.emit(MESSAGES_TOPICS.DELETE, { id: messageId, time: new Date() });
     return { status: 'ACCEPTED' };
   }
 }

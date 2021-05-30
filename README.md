@@ -41,8 +41,10 @@ npm run start:dev
 - [KafkaJs](https://www.npmjs.com/package/kafkajs)
 - [PG](https://www.npmjs.com/package/pg)
 - [Typeorm](https://www.npmjs.com/package/typeorm)
-- [Nest Microservices](https://www.npmjs.com/package/@nest/microservices)
-- [Nest Typeorm](https://www.npmjs.com/package/@nestjs/typeorm)
+- [NestJs Microservices](https://www.npmjs.com/package/@nest/microservices)
+- [NestJs Typeorm](https://www.npmjs.com/package/@nestjs/typeorm)
+- [NestJs platform-socket.io](https://www.npmjs.com/package/@nestjs/platform-socket.io)
+- [NestJs websockets](https://www.npmjs.com/package/@nestjs/websockets)
 
 ## Kafka config
 ````ts
@@ -96,6 +98,23 @@ See [consumers.controller.ts#39](/src/controller/consumers.controller.ts)
 
 ## Demo
 
+- ### Start the Kafka cluster
+
+```shell
+docker-compose up
+```
+
+- ### Start the web app
+Clone the following repository [kafka-messages-web-app](https://github.com/idirnaitali/kafka-messages-web-app) and then start it.
+
+You will have this screen when starting the app
+
+![create logs](img/demo-0.png)
+
+And this one when you will post, update and delete messages
+
+![create logs](img/demo.png)
+
 - ### Running services
 ````shell
 npm run start
@@ -104,9 +123,9 @@ npm run start
 
 - ### Create message 
 ```shell
-curl --location --request POST 'http://localhost:3000/api/v1/producers/messages' --header 'Content-Type: application/json' --data-raw '{"pseudo": "idir", "content": "Hello, i am ready, we can start ;)"}'
+curl --location --request POST 'http://localhost:3000/api/v1/producers/messages' --header 'Content-Type: application/json' --data-raw '{"pseudo": "Warrior", "content": "Hello, i am ready, we can start ;)"}'
 ```
-![create logs](img/creat-logs.png)
+![create logs](img/create-logs.png)
 
 ![db](img/db.png)
 
